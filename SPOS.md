@@ -234,10 +234,10 @@ How to handle multiple blocks at the same time
 ----------------------------------------------
 
 1)  While receiving a new block, determine whether the previous HASH in
-    > the current block is the latest local block HASH ;
+    the current block is the latest local block HASH ;
 
 2)  If yes, join the blockchain directly in the region; otherwise,
-    > directly reject it;
+    directly reject it;
 
     If multiple blocks are generated at the same time, the following
     occurs:
