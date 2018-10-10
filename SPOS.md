@@ -6,13 +6,11 @@ SAFE
 ====
 
 SPOS Consensus Algorithm
-------------------------
+========================
 
-** **
+1.  **Block production process**
 
- 
-
-### Block production process
+<!-- -->
 
 1)  When the program starts, a timer is started, and the timer interval
     > is set to 50 milliseconds;
@@ -25,7 +23,9 @@ SPOS Consensus Algorithm
 
 4)  After the round of block generation, re-select 9 bookkeepers;
 
-> **1.1.      Initialization**
+    1.  **Initialization**
+
+<!-- -->
 
 1)  At the start of the program, and the master node data has been
     > synchronized, do the following steps;
@@ -35,7 +35,9 @@ SPOS Consensus Algorithm
 
 3)  According to Rule 1.2, select 9 bookkeepers from the second step;
 
-#### 1.2.      Choose of 9 bookkeepers
+    2.  **Choose of 9 bookkeepers**
+
+<!-- -->
 
 1)  After receiving a new block and passing the test, use the latest
     > height of the blockchain to find the remainder of 9 (the
@@ -115,8 +117,8 @@ std::swap( \_wso.current\_shuffled\_witnesses\[i\],
 
 > now\_hi is calculated from the value (current block chain latest
 > time) \<\< 32
->
-> **1.3.**      **Consensus algorithm switch**
+
+3.  **Consensus algorithm switch**
 
 Add a control selects nine bookkeeper switches to prevent the occurrence
 of evil behaviors by selecting nine bookkeepers from the user\'s master
@@ -131,7 +133,9 @@ follows:
 
 3)  Select 9 bookkeepers from the list of official masternodes;
 
-> **1.4**      **Generating block**
+    4.  **Generating block**
+
+<!-- -->
 
 1)  Check if the masternode is valid, and if the block data has been
     > synchronized, if not, return directly, otherwise continue with the
@@ -243,8 +247,6 @@ skipped.
 
 2)   If yes, join the blockchain directly in the region; otherwise,
     > directly reject it;
-
- 
 
 If multiple blocks are generated at the same time, the following occurs:
 
