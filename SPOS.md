@@ -8,9 +8,8 @@ SAFE
 SPOS Consensus Algorithm
 ========================
 
-1.  **Block production process**
-
-<!-- -->
+Block production process
+------------------------
 
 1)  When the program starts, a timer is started, and the timer interval
     > is set to 50 milliseconds;
@@ -23,7 +22,7 @@ SPOS Consensus Algorithm
 
 4)  After the round of block generation, re-select 9 bookkeepers;
 
-    1.  **Initialization**
+    1.  ### Initialization
 
 <!-- -->
 
@@ -35,7 +34,7 @@ SPOS Consensus Algorithm
 
 3)  According to Rule 1.2, select 9 bookkeepers from the second step;
 
-    2.  **Choose of 9 bookkeepers**
+    2.  ### Choose of 9 bookkeepers
 
 <!-- -->
 
@@ -118,7 +117,7 @@ std::swap( \_wso.current\_shuffled\_witnesses\[i\],
 > now\_hi is calculated from the value (current block chain latest
 > time) \<\< 32
 
-3.  **Consensus algorithm switch**
+### Consensus algorithm switch
 
 Add a control selects nine bookkeeper switches to prevent the occurrence
 of evil behaviors by selecting nine bookkeepers from the user\'s master
@@ -133,7 +132,7 @@ follows:
 
 3)  Select 9 bookkeepers from the list of official masternodes;
 
-    4.  **Generating block**
+    4.  ### Generating block
 
 <!-- -->
 
@@ -167,9 +166,8 @@ follows:
     > greater than 500 milliseconds. If it is greater, return directly,
     > otherwise the block is packaged and broadcast;
 
-<!-- -->
-
-2.  **coinbase adds extra parameters**
+coinbase adds extra parameters
+------------------------------
 
 In the coinbase transaction output field, add the following two fields:
 
@@ -178,20 +176,19 @@ In the coinbase transaction output field, add the following two fields:
 2)  using the masternode private key to generate a signature on the
     > masternode\'s collateral address
 
-<!-- -->
-
-3.  **Modify block parameters**
+Modify block parameters
+-----------------------
 
 nBits and nNonce in the block are modified to 0 ;
 
-4.  **Enable SPOS**
+Enable SPOS
+-----------
 
 After reaching a certain block height (tentative: 1200000),
 the SPOS consensus algorithm is officially launched ;
 
-5.  **Verification block**
-
-<!-- -->
+Verification block
+------------------
 
 1)  While receiving a block, determine whether the block height is
     > greater than or equal to 1200000. If it is greater than, add the
@@ -222,9 +219,8 @@ the SPOS consensus algorithm is officially launched ;
     > address of the masternode in the block. If it does not pass the
     > verification, the block is rejected, otherwise accept the block;
 
-<!-- -->
-
-6.  **How to deal with the block production timeout**
+How to deal with the block production timeout
+---------------------------------------------
 
 There is no special processing logic for the block production timeout,
 because the block timer is always running, and the block is generated
@@ -238,9 +234,8 @@ node behind it according to block time, and it is only the abnormal
 block producing node's turn in the next round, so the abnormal node is
 skipped.
 
-7.  **How to handle multiple blocks at the same time**
-
-<!-- -->
+How to handle multiple blocks at the same time
+----------------------------------------------
 
 1)  While receiving a new block, determine whether the previous HASH in
     > the current block is the latest local block HASH ;
@@ -265,9 +260,8 @@ If multiple blocks are generated at the same time, the following occurs:
     > situations, please see the \"Problem of the Competitive Chain\"
     > document;
 
-<!-- -->
-
-8.  **block time**
+block time
+----------
 
 1 ) The block time is changed from the original 2.5 minutes
 to 10 seconds;
@@ -277,7 +271,8 @@ the new consensus algorithm reward each block less than the
 existing POW consensus algorithm, but the number of blocks produced per
 day is increased, making total reward per day not reduced;
 
-9.  **What should I do if the bookkeeper drops offline?**
+What should I do if the bookkeeper drops offline?
+-------------------------------------------------
 
 1 ) If some of the 9 bookkeepers drops offline, start the next round of
 re-selection of 9 bookkeepers, then start again from the beginning to
