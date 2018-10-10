@@ -22,7 +22,7 @@ Block production process
 
 4)  After the round of block generation, re-select 9 bookkeepers;
 
-Initialization {#initialization .ListParagraph}
+Initialization
 --------------
 
 1)  At the start of the program, and the master node data has been
@@ -33,7 +33,7 @@ Initialization {#initialization .ListParagraph}
 
 3)  According to Rule 1.2, select 9 bookkeepers from the second step;
 
-Choose of 9 bookkeepers {#chooseof-9bookkeepers .ListParagraph}
+Choose of 9 bookkeepers
 -----------------------
 
 1)  After receiving a new block and passing the test, use the latest
@@ -114,7 +114,7 @@ std::swap( \_wso.current\_shuffled\_witnesses\[i\],
 now\_hi is calculated from the value (current block chain latest
 time) \<\< 32
 
-Consensus algorithm switch {#consensus-algorithm-switch .ListParagraph}
+Consensus algorithm switch
 --------------------------
 
 Add a control selects nine bookkeeper switches to prevent the occurrence
@@ -130,7 +130,7 @@ follows:
 
 3)  Select 9 bookkeepers from the list of official masternodes;
 
-Generating block {#generating-block .ListParagraph}
+Generating block
 ----------------
 
 1)  Check if the masternode is valid, and if the block data has been
