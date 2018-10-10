@@ -22,10 +22,8 @@ Block production process
 
 4)  After the round of block generation, re-select 9 bookkeepers;
 
-    1.  Initialization
-        --------------
-
-<!-- -->
+Initialization {#initialization .ListParagraph}
+--------------
 
 1)  At the start of the program, and the master node data has been
     synchronized, do the following steps;
@@ -35,10 +33,8 @@ Block production process
 
 3)  According to Rule 1.2, select 9 bookkeepers from the second step;
 
-    2.  Choose of 9 bookkeepers
-        -----------------------
-
-<!-- -->
+Choose of 9 bookkeepers {#chooseof-9bookkeepers .ListParagraph}
+-----------------------
 
 1)  After receiving a new block and passing the test, use the latest
     height of the blockchain to find the remainder of 9 (the
@@ -118,7 +114,7 @@ std::swap( \_wso.current\_shuffled\_witnesses\[i\],
 now\_hi is calculated from the value (current block chain latest
 time) \<\< 32
 
-Consensus algorithm switch
+Consensus algorithm switch {#consensus-algorithm-switch .ListParagraph}
 --------------------------
 
 Add a control selects nine bookkeeper switches to prevent the occurrence
@@ -134,9 +130,8 @@ follows:
 
 3)  Select 9 bookkeepers from the list of official masternodes;
 
-    4.  ### Generating block
-
-<!-- -->
+Generating block {#generating-block .ListParagraph}
+----------------
 
 1)  Check if the masternode is valid, and if the block data has been
     synchronized, if not, return directly, otherwise continue with the
