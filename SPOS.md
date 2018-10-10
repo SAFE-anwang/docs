@@ -10,62 +10,38 @@ SPOS Consensus Algorithm
 
 Block production process
 ------------------------
-
-1)  When the program starts, a timer is started, and the timer interval
-    > is set to 50 milliseconds;
-
-2)  At the time of startup, select 9 bookkeepers from the list of
-    > masternodes;
-
-3)  In the timer callback, 9 bookkeepers generate blocks in turn, 1, 2,
-    > 3, 4, 5, \....., 9;
-
+    
+1)  When the program starts, a timer is started, and the timer interval is set to 50 milliseconds;
+2)  At the time of startup, select 9 bookkeepers from the list of masternodes;
+3)  In the timer callback, 9 bookkeepers generate blocks in turn, 1, 2, 3, 4, 5, ....., 9;
 4)  After the round of block generation, re-select 9 bookkeepers;
 
-    1.  ### Initialization
+    ### Initialization
 
 <!-- -->
 
-1)  At the start of the program, and the master node data has been
-    > synchronized, do the following steps;
+    1)  At the start of the program, and the master node data has been synchronized, do the following steps;
 
-2)  According to the current block height, the search is opened backward
-    > until the block height is 9 and the result is 0;
+    2)  According to the current block height, the search is opened backward until the block height is 9 and the result is 0;
 
-3)  According to Rule 1.2, select 9 bookkeepers from the second step;
+    3)  According to Rule 1.2, select 9 bookkeepers from the second step;
 
-    2.  ### Choose of 9 bookkeepers
+    ### Choose of 9 bookkeepers
 
 <!-- -->
 
-1)  After receiving a new block and passing the test, use the latest
-    > height of the blockchain to find the remainder of 9 (the
-    > bookkeeper), and obtain the remaining result. If it is not equal
-    > to 0, return directly, otherwise continue the following steps;
+    1)  After receiving a new block and passing the test, use the latest height of the blockchain to find the remainder of 9 (the bookkeeper), and obtain the remaining result. If it is not equal to 0, return directly, otherwise continue the following steps;
 
-2)  Determine whether the current network has switched on forcibly
-    > selecting 9 bookkeepers from the official masternode list, and if
-    > so, select from the official masternode list; otherwise, selecting
-    > from the user masternode list;
+    2)  Determine whether the current network has switched on forcibly selecting 9 bookkeepers from the official masternode list, and if so, select from the official masternode list; otherwise, selecting from the user masternode list;
 
-3)  From the masternode list (may be: the official masternode list, the
-    > user masternode list), select the masternode whose status
-    > is Enabled and online duration greater than 3 days, and sort the
-    > selected masternodes according to the score from large to small.
-    > Rule of calculating the score: generate a HASH value from the
-    > masternode collateral address and the current block\'s latest
-    > block time, calculate an integer for HASH, the algorithm is as
-    > follows:
+    3)  From the masternode list (may be: the official masternode list, the user masternode list), select the masternode whose status is Enabled and online duration greater than 3 days, and sort the selected masternodes according to the score from large to small. Rule of calculating the score: generate a HASH value from the masternode collateral address and the current block\'s latest block time, calculate an integer for HASH, the algorithm is as follows:
 
-> uint32\_t static inline ReadLE32(const unsigned char\* ptr)
->
-> {
->
-> return le32toh(\*((uint32\_t\*)ptr));
+    uint32\_t static inline ReadLE32(const unsigned char\* ptr)
+    {
+        return le32toh(\*((uint32\_t\*)ptr));
+    }
 
-}
-
-> arith\_uint256 UintToArith256(const uint256 &a)
+    arith\_uint256 UintToArith256(const uint256 &a)
 >
 > {
 >
