@@ -10,38 +10,61 @@ SPOS Consensus Algorithm
 
 Block production process
 ------------------------
-    
-1)  When the program starts, a timer is started, and the timer interval is set to 50 milliseconds;
-2)  At the time of startup, select 9 bookkeepers from the list of masternodes;
-3)  In the timer callback, 9 bookkeepers generate blocks in turn, 1, 2, 3, 4, 5, ....., 9;
+
+1)  When the program starts, a timer is started, and the timer interval
+    is set to 50 milliseconds;
+
+2)  At the time of startup, select 9 bookkeepers from the list of
+    masternodes;
+
+3)  In the timer callback, 9 bookkeepers generate blocks in turn, 1, 2,
+    3, 4, 5, \....., 9;
+
 4)  After the round of block generation, re-select 9 bookkeepers;
 
-    ### Initialization
+    1.  ### Initialization
 
 <!-- -->
 
-    1)  At the start of the program, and the master node data has been synchronized, do the following steps;
+1)  At the start of the program, and the master node data has been
+    synchronized, do the following steps;
 
-    2)  According to the current block height, the search is opened backward until the block height is 9 and the result is 0;
+2)  According to the current block height, the search is opened backward
+    until the block height is 9 and the result is 0;
 
-    3)  According to Rule 1.2, select 9 bookkeepers from the second step;
+3)  According to Rule 1.2, select 9 bookkeepers from the second step;
 
-    ### Choose of 9 bookkeepers
+    2.  ### Choose of 9 bookkeepers
 
 <!-- -->
 
-    1)  After receiving a new block and passing the test, use the latest height of the blockchain to find the remainder of 9 (the bookkeeper), and obtain the remaining result. If it is not equal to 0, return directly, otherwise continue the following steps;
+1)  After receiving a new block and passing the test, use the latest
+    height of the blockchain to find the remainder of 9 (the
+    bookkeeper), and obtain the remaining result. If it is not equal to
+    0, return directly, otherwise continue the following steps;
 
-    2)  Determine whether the current network has switched on forcibly selecting 9 bookkeepers from the official masternode list, and if so, select from the official masternode list; otherwise, selecting from the user masternode list;
+2)  Determine whether the current network has switched on forcibly
+    selecting 9 bookkeepers from the official masternode list, and if
+    so, select from the official masternode list; otherwise, selecting
+    from the user masternode list;
 
-    3)  From the masternode list (may be: the official masternode list, the user masternode list), select the masternode whose status is Enabled and online duration greater than 3 days, and sort the selected masternodes according to the score from large to small. Rule of calculating the score: generate a HASH value from the masternode collateral address and the current block\'s latest block time, calculate an integer for HASH, the algorithm is as follows:
+3)  From the masternode list (may be: the official masternode list, the
+    user masternode list), select the masternode whose status
+    is Enabled and online duration greater than 3 days, and sort the
+    selected masternodes according to the score from large to small.
+    Rule of calculating the score: generate a HASH value from the
+    masternode collateral address and the current block\'s latest block
+    time, calculate an integer for HASH, the algorithm is as follows:
 
-    uint32\_t static inline ReadLE32(const unsigned char\* ptr)
-    {
-        return le32toh(\*((uint32\_t\*)ptr));
-    }
+> uint32\_t static inline ReadLE32(const unsigned char\* ptr)
+>
+> {
+>
+> return le32toh(\*((uint32\_t\*)ptr));
 
-    arith\_uint256 UintToArith256(const uint256 &a)
+}
+
+> arith\_uint256 UintToArith256(const uint256 &a)
 >
 > {
 >
@@ -55,7 +78,7 @@ Block production process
 
 }
 
-4)  Randomly select 9 nodes from the list of pre-selected masternodes as
+1)  Randomly select 9 nodes from the list of pre-selected masternodes as
     > the bookkeeper. The random algorithm is as follows:
 
 > auto now\_hi = uint64\_t(head\_block\_time().sec\_since\_epoch()) \<\<
@@ -90,8 +113,8 @@ std::swap( \_wso.current\_shuffled\_witnesses\[i\],
 
 }
 
-> now\_hi is calculated from the value (current block chain latest
-> time) \<\< 32
+now\_hi is calculated from the value (current block chain latest
+time) \<\< 32
 
 ### Consensus algorithm switch
 
@@ -100,57 +123,55 @@ of evil behaviors by selecting nine bookkeepers from the user\'s master
 list, leading to the inability to generate blocks. The rules are as
 follows:
 
-1)  Add Spork to send a notification, open to force the selection of 9
-    > bookkeepers from the list of official nodes; the rules are as
-    > follows:
+5)  Add Spork to send a notification, open to force the selection of 9
+    bookkeepers from the list of official nodes; the rules are as
+    follows:
 
-2)  Built in some official masternode list in the code;
+6)  Built in some official masternode list in the code;
 
-3)  Select 9 bookkeepers from the list of official masternodes;
+7)  Select 9 bookkeepers from the list of official masternodes;
 
     4.  ### Generating block
 
-<!-- -->
+8)  Check if the masternode is valid, and if the block data has been
+    synchronized, if not, return directly, otherwise continue with the
+    following steps;
 
-1)  Check if the masternode is valid, and if the block data has been
-    > synchronized, if not, return directly, otherwise continue with the
-    > following steps;
+9)  Obtain the collateral address of the masternode, determine whether
+    it is in the 9 bookkeeper list, if it does not exist, return
+    directly, otherwise continue the following steps;
 
-2)  Obtain the collateral address of the masternode, determine whether
-    > it is in the 9 bookkeeper list, if it does not exist, return
-    > directly, otherwise continue the following steps;
+10) Get the local time, determine whether the acquisition time is less
+    than the time of the latest block. If it is less, return directly,
+    otherwise continue the following steps;
 
-3)  Get the local time, determine whether the acquisition time is less
-    > than the time of the latest block. If it is less, return directly,
-    > otherwise continue the following steps;
+11) Use the local time plus the interval of the production block, use it
+    to subtract the time recorded by the 9 bookkeepers, and divide the
+    result by the time interval of the block, and then get the remainder
+    of the result to 9. This gives an index;
 
-4)  Use the local time plus the interval of the production block, use it
-    > to subtract the time recorded by the 9 bookkeepers, and divide the
-    > result by the time interval of the block, and then get the
-    > remainder of the result to 9. This gives an index;
+12) Using the index calculated in step 4, find the planned block time
+    and the masternode collateral address in the 9 bookkeeper list;
 
-5)  Using the index calculated in step 4, find the planned block time
-    > and the masternode collateral address in the 9 bookkeeper list;
+13) Determine whether the collateral address of the masternode is the
+    same as the collateral address of this particular masternode. If it
+    is not the same, return directly, otherwise continue with the
+    following steps;
 
-6)  Determine whether the collateral address of the masternode is the
-    > same as the collateral address of this particular masternode. If
-    > it is not the same, return directly, otherwise continue with the
-    > following steps;
-
-7)  Use the next block time minus the time obtained in step 3, and take
-    > the absolute value of the result to determine whether it is
-    > greater than 500 milliseconds. If it is greater, return directly,
-    > otherwise the block is packaged and broadcast;
+14) Use the next block time minus the time obtained in step 3, and take
+    the absolute value of the result to determine whether it is greater
+    than 500 milliseconds. If it is greater, return directly, otherwise
+    the block is packaged and broadcast;
 
 coinbase adds extra parameters
 ------------------------------
 
 In the coinbase transaction output field, add the following two fields:
 
-1)  the collateral address of the masternode;
+15) the collateral address of the masternode;
 
-2)  using the masternode private key to generate a signature on the
-    > masternode\'s collateral address
+16) using the masternode private key to generate a signature on the
+    masternode\'s collateral address
 
 Modify block parameters
 -----------------------
@@ -166,34 +187,33 @@ the SPOS consensus algorithm is officially launched ;
 Verification block
 ------------------
 
-1)  While receiving a block, determine whether the block height is
-    > greater than or equal to 1200000. If it is greater than, add the
-    > following rule of determination; otherwise, the following rules
-    > are not included;
+17) While receiving a block, determine whether the block height is
+    greater than or equal to 1200000. If it is greater than, add the
+    following rule of determination; otherwise, the following rules are
+    not included;
 
-2)  Determine block nBits, nNonce is 0; if not, reject this block;
-    > otherwise, continue with the following steps;
+18) Determine block nBits, nNonce is 0; if not, reject this block;
+    otherwise, continue with the following steps;
 
-3)  Get the local time, use it to subtract the time in the block to
-    > determine whether it is greater than negative 10 seconds. If it is
-    > greater, reject the block; otherwise continue the following steps;
+19) Get the local time, use it to subtract the time in the block to
+    determine whether it is greater than negative 10 seconds. If it is
+    greater, reject the block; otherwise continue the following steps;
 
-4)  Verify the signature value in the block with the mortgage address of
-    > the master node in the block. If the verification does not pass,
-    > reject this block, otherwise continue with the following steps;
+20) Verify the signature value in the block with the mortgage address of
+    the master node in the block. If the verification does not pass,
+    reject this block, otherwise continue with the following steps;
 
-5)  If the node is currently in the sync block phase, the verification
-    > is completed directly, otherwise the following steps are
-    > continued;
+21) If the node is currently in the sync block phase, the verification
+    is completed directly, otherwise the following steps are continued;
 
-6)  Find the collateral address of the masternode in the
-    > local 9 bookkeeper list by index, and determine whether it is
-    > equal to the collateral address of the masternode in the block. If
-    > not, reject the block; otherwise continue the following steps;
+22) Find the collateral address of the masternode in the
+    local 9 bookkeeper list by index, and determine whether it is equal
+    to the collateral address of the masternode in the block. If not,
+    reject the block; otherwise continue the following steps;
 
-7)  Verify the signature value in the block by using the collateral
-    > address of the masternode in the block. If it does not pass the
-    > verification, the block is rejected, otherwise accept the block;
+23) Verify the signature value in the block by using the collateral
+    address of the masternode in the block. If it does not pass the
+    verification, the block is rejected, otherwise accept the block;
 
 How to deal with the block production timeout
 ---------------------------------------------
@@ -213,28 +233,31 @@ skipped.
 How to handle multiple blocks at the same time
 ----------------------------------------------
 
-1)  While receiving a new block, determine whether the previous HASH in
-    > the current block is the latest local block HASH ;
+24) While receiving a new block, determine whether the previous HASH in
+    the current block is the latest local block HASH ;
 
-2)   If yes, join the blockchain directly in the region; otherwise,
-    > directly reject it;
+25) If yes, join the blockchain directly in the region; otherwise,
+    directly reject it;
 
-If multiple blocks are generated at the same time, the following occurs:
+    If multiple blocks are generated at the same time, the following
+    occurs:
+
+<!-- -->
 
 1)  If at some point two blocks are generated, one block is recognized
-    > and accepted by other nodes, other nodes
-    > being two-thirds of 9 nodes;
+    and accepted by other nodes, other nodes
+    being two-thirds of 9 nodes;
 
 2)  Another block is recognized and accepted by one third of the other
-    > nodes, then at the time two networks have formed;
+    nodes, then at the time two networks have formed;
 
 3)  The two networks, with increasing blocks produced over time,
-    > eventually connect to a junction and see which chain is the
-    > longest, it will automatically switch to the longest chain;
+    eventually connect to a junction and see which chain is the longest,
+    it will automatically switch to the longest chain;
 
 4)  Here is only an example of a situation. For more complicated
-    > situations, please see the \"Problem of the Competitive Chain\"
-    > document;
+    situations, please see the \"Problem of the Competitive Chain\"
+    document;
 
 block time
 ----------
