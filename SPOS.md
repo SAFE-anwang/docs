@@ -22,7 +22,8 @@ Block production process
 
 4)  After the round of block generation, re-select 9 bookkeepers;
 
-    1.  ### Initialization
+    1.  Initialization
+        --------------
 
 <!-- -->
 
@@ -34,7 +35,8 @@ Block production process
 
 3)  According to Rule 1.2, select 9 bookkeepers from the second step;
 
-    2.  ### Choose of 9 bookkeepers
+    2.  Choose of 9 bookkeepers
+        -----------------------
 
 <!-- -->
 
@@ -61,9 +63,9 @@ Block production process
 > {
 >
 > return le32toh(\*((uint32\_t\*)ptr));
-
-}
-
+>
+> }
+>
 > arith\_uint256 UintToArith256(const uint256 &a)
 >
 > {
@@ -75,11 +77,11 @@ Block production process
 > b.pn\[x\] = ReadLE32(a.begin() + x\*4);
 >
 > return b;
+>
+> }
 
-}
-
-1)  Randomly select 9 nodes from the list of pre-selected masternodes as
-    > the bookkeeper. The random algorithm is as follows:
+4)  Randomly select 9 nodes from the list of pre-selected masternodes as
+    the bookkeeper. The random algorithm is as follows:
 
 > auto now\_hi = uint64\_t(head\_block\_time().sec\_since\_epoch()) \<\<
 > 32;
@@ -116,61 +118,64 @@ std::swap( \_wso.current\_shuffled\_witnesses\[i\],
 now\_hi is calculated from the value (current block chain latest
 time) \<\< 32
 
-### Consensus algorithm switch
+Consensus algorithm switch
+--------------------------
 
 Add a control selects nine bookkeeper switches to prevent the occurrence
 of evil behaviors by selecting nine bookkeepers from the user\'s master
 list, leading to the inability to generate blocks. The rules are as
 follows:
 
-5)  Add Spork to send a notification, open to force the selection of 9
+1)  Add Spork to send a notification, open to force the selection of 9
     bookkeepers from the list of official nodes; the rules are as
     follows:
 
-6)  Built in some official masternode list in the code;
+2)  Built in some official masternode list in the code;
 
-7)  Select 9 bookkeepers from the list of official masternodes;
+3)  Select 9 bookkeepers from the list of official masternodes;
 
     4.  ### Generating block
 
-8)  Check if the masternode is valid, and if the block data has been
-    synchronized, if not, return directly, otherwise continue with the
-    following steps;
+<!-- -->
 
-9)  Obtain the collateral address of the masternode, determine whether
-    it is in the 9 bookkeeper list, if it does not exist, return
-    directly, otherwise continue the following steps;
+1)  Check if the masternode is valid, and if the block data has been
+    > synchronized, if not, return directly, otherwise continue with the
+    > following steps;
 
-10) Get the local time, determine whether the acquisition time is less
-    than the time of the latest block. If it is less, return directly,
-    otherwise continue the following steps;
+2)  Obtain the collateral address of the masternode, determine whether
+    > it is in the 9 bookkeeper list, if it does not exist, return
+    > directly, otherwise continue the following steps;
 
-11) Use the local time plus the interval of the production block, use it
-    to subtract the time recorded by the 9 bookkeepers, and divide the
-    result by the time interval of the block, and then get the remainder
-    of the result to 9. This gives an index;
+3)  Get the local time, determine whether the acquisition time is less
+    > than the time of the latest block. If it is less, return directly,
+    > otherwise continue the following steps;
 
-12) Using the index calculated in step 4, find the planned block time
-    and the masternode collateral address in the 9 bookkeeper list;
+4)  Use the local time plus the interval of the production block, use it
+    > to subtract the time recorded by the 9 bookkeepers, and divide the
+    > result by the time interval of the block, and then get the
+    > remainder of the result to 9. This gives an index;
 
-13) Determine whether the collateral address of the masternode is the
-    same as the collateral address of this particular masternode. If it
-    is not the same, return directly, otherwise continue with the
-    following steps;
+5)  Using the index calculated in step 4, find the planned block time
+    > and the masternode collateral address in the 9 bookkeeper list;
 
-14) Use the next block time minus the time obtained in step 3, and take
-    the absolute value of the result to determine whether it is greater
-    than 500 milliseconds. If it is greater, return directly, otherwise
-    the block is packaged and broadcast;
+6)  Determine whether the collateral address of the masternode is the
+    > same as the collateral address of this particular masternode. If
+    > it is not the same, return directly, otherwise continue with the
+    > following steps;
+
+7)  Use the next block time minus the time obtained in step 3, and take
+    > the absolute value of the result to determine whether it is
+    > greater than 500 milliseconds. If it is greater, return directly,
+    > otherwise the block is packaged and broadcast;
 
 coinbase adds extra parameters
 ------------------------------
 
 In the coinbase transaction output field, add the following two fields:
 
-15) the collateral address of the masternode;
+5)  the collateral address of the masternode;
 
-16) using the masternode private key to generate a signature on the
+6)  using the masternode private key to generate a signature on the
     masternode\'s collateral address
 
 Modify block parameters
@@ -187,31 +192,31 @@ the SPOS consensus algorithm is officially launched ;
 Verification block
 ------------------
 
-17) While receiving a block, determine whether the block height is
+7)  While receiving a block, determine whether the block height is
     greater than or equal to 1200000. If it is greater than, add the
     following rule of determination; otherwise, the following rules are
     not included;
 
-18) Determine block nBits, nNonce is 0; if not, reject this block;
+8)  Determine block nBits, nNonce is 0; if not, reject this block;
     otherwise, continue with the following steps;
 
-19) Get the local time, use it to subtract the time in the block to
+9)  Get the local time, use it to subtract the time in the block to
     determine whether it is greater than negative 10 seconds. If it is
     greater, reject the block; otherwise continue the following steps;
 
-20) Verify the signature value in the block with the mortgage address of
+10) Verify the signature value in the block with the mortgage address of
     the master node in the block. If the verification does not pass,
     reject this block, otherwise continue with the following steps;
 
-21) If the node is currently in the sync block phase, the verification
+11) If the node is currently in the sync block phase, the verification
     is completed directly, otherwise the following steps are continued;
 
-22) Find the collateral address of the masternode in the
+12) Find the collateral address of the masternode in the
     local 9 bookkeeper list by index, and determine whether it is equal
     to the collateral address of the masternode in the block. If not,
     reject the block; otherwise continue the following steps;
 
-23) Verify the signature value in the block by using the collateral
+13) Verify the signature value in the block by using the collateral
     address of the masternode in the block. If it does not pass the
     verification, the block is rejected, otherwise accept the block;
 
@@ -233,10 +238,10 @@ skipped.
 How to handle multiple blocks at the same time
 ----------------------------------------------
 
-24) While receiving a new block, determine whether the previous HASH in
+14) While receiving a new block, determine whether the previous HASH in
     the current block is the latest local block HASH ;
 
-25) If yes, join the blockchain directly in the region; otherwise,
+15) If yes, join the blockchain directly in the region; otherwise,
     directly reject it;
 
     If multiple blocks are generated at the same time, the following
