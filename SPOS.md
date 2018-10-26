@@ -5,7 +5,7 @@
 SAFE
 ====
 
-SPOS Consensus Algorithm
+SPOS Consensus Algorithm(First draft)
 ========================
 
 Block production process
